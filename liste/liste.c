@@ -113,7 +113,7 @@ void list_affichage(node_t * head){
 	}
 	
 	node_t *copy = head;
-	while (copy->next != NULL){
+	while (copy != NULL){
 		int *p = list_get_data(copy);
 		printf("%d ", *p);
 		copy = copy->next;

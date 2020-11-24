@@ -11,8 +11,9 @@
 int main(){
 	printf("TEST DU MODULE LISTE\n\n");
 	int tab[SIZE] = {0,1,2,3,4};
-	int a = 6;
+	int a = 6, b = 7;
 	int *p = &a;
+	int *p2 = &b;
 	int val = 1;
 	
 	printf("Création de liste\n");
@@ -38,6 +39,22 @@ int main(){
 		listTmp = list_next(listTmp);
 		val++;
 	}
+	
+	
+	printf("On insère un pointeur sur un entier de valeur 6 en tête de liste\n");
+	list = list_insert(list, p);
+	
+	printf("Affichage de la liste\n");
+	list_affichage(list);
+	
+	printf("On retire 2 à la liste \n");
+	list = list_remove(list,&tab[2]);
+	
+	printf("Affichage de la liste\n");
+	list_affichage(list);
+	
+	printf("On essaye de retirer le noeud dont la valeur est le pointeur sur l'entier 7 \n");
+	list = list_remove(list,&tab[2]);
 	
 	
 	printf("\nTest de la fonction list_headRemove pour vider toute la liste tête par tête\n");
@@ -79,10 +96,19 @@ int main(){
 	printf("Affichage de la liste\n");
 	list_affichage(list);
 	
+	printf("On réinsère des noeuds dans la liste pour pouvoir tester la fonction list_destroy à la fin\n");
+	list = list_insert(list, &tab[0]);
+	val = 1;
+	while(val < SIZE){
+		LIST_APPEND(list, &tab[val], int);
+		val++;
+	}
+	list_affichage(list);
 	
-	
-	printf("DESTRUCTION DE LA LISTE\n");
+	printf("DESTRUCTION DE LA LISTE avec la fonction list_destroy\n");
 	list_destroy(list);
+	printf("On essaye d'afficher la liste. Mais les noeuds de la liste sont libérés de la mémoire donc : Segmentation fault attendu\n");
+	list_affichage(list);
 	printf("FIN DU TEST\n");
 	
 	return 0;
