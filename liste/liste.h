@@ -14,6 +14,35 @@ struct node{
 typedef struct node node_t;
 
 
+/* ---------------------------------------------------
+ * macro definition
+ * teste si la liste est vide 
+ * ---------------------------------------------------
+ * list 	: liste (node_t *)
+ * ---------------------------------------------------
+ * retourne 1 si la liste est vide, 0 sinon
+ * ----------------------------------------------------
+ */
+#define LIST_EMPTY(list)  ( list == NULL ) 
+
+/* ---------------------------------------------------
+ * macro definition
+ * ajouter une valeur en queue de liste 
+ * ---------------------------------------------------
+ * list 	: liste (node_t *)
+ * valeur	: valeur à mettre à la queue de la liste
+ * type		: type de l'element 
+ * ---------------------------------------------------
+ * retourne 0 si la liste est vide, 1 sinon 
+ * ----------------------------------------------------
+ */
+#define	LIST_APPEND( list , val, type )  \
+   ((list) != NULL ? \
+   	(( list = list_append(list, (type*)val)), 1 ) : \
+	(type)0)
+	
+
+
 // declarations des fonctions publics
 node_t * list_create(void); 
 //creation d'une nouvelle liste vide

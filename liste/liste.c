@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "liste.h"
-//typedef struct node node_t;
 
 node_t * list_create(void){
 	return (node_t *)NULL;
@@ -45,6 +44,9 @@ node_t * list_insert(node_t * head, void * data){
 }
 
 node_t * list_append(node_t * head, void * data){
+	if(head == NULL){
+		return NULL;
+	}
 	node_t *n = (node_t *)malloc(sizeof(node_t));
 	n->value = data;
 	n->next = NULL;
@@ -104,6 +106,12 @@ void list_affichage(node_t * head){
 		 printf("La liste est vide\n\n");
 		 return;
 	}
+	if(head->next == NULL){
+		int *p = list_get_data(head);
+		printf("%d\n\n", *p);
+		return;
+	}
+	
 	node_t *copy = head;
 	while (copy->next != NULL){
 		int *p = list_get_data(copy);
