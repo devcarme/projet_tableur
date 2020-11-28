@@ -1,6 +1,5 @@
 /* ---------------------------------------------------
- * Entete et macro pour la gestion de pile
- * les elements doivent etre affectables
+ * Fonctions du module liste
  * ---------------------------------------------------
  * L. Ducarme
  * ---------------------------------------------------

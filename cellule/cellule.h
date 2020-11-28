@@ -1,50 +1,44 @@
 /* ---------------------------------------------------
- * Entete et macro pour la gestion de liste
- * les elements doivent etre affectables
+ * Entete et macro pour la gestion des cellules, des 
+ * formules et de leur évaluation
  * ---------------------------------------------------
  * L. Ducarme
  * ---------------------------------------------------
  */
-#ifndef LISTE_H
-#define LISTE_H
+#ifndef CELLULE_H
+#define CELLULE_H
 
+#include "../stack/stack.h"
+#include "liste.h"
 
-struct node{
-	void *value;
-	struct node *next;
+struct cell{
+	char * chaineSaisie;
+	double val;
+	node_t * listeJeton;
+	struct cell * next;
 };
-typedef struct node node_t;
+typedef struct cell s_cell;
 
 
-/* ---------------------------------------------------
- * macro definition
- * teste si la liste est vide 
- * ---------------------------------------------------
- * list 	: liste (node_t *)
- * ---------------------------------------------------
- * retourne 1 si la liste est vide, 0 sinon
- * ----------------------------------------------------
- */
-#define LIST_EMPTY(list)  ( list == NULL ) 
+typedef struct token{
+	enum {VALUE, REF, OPERATOR} type;
+	union{
+			int cst;
+			s_cell * ref;
+			void (*operator) (my_stack_t * eval);
+		} value;
+}s_token;	
 
-/* ---------------------------------------------------
- * macro definition
- * ajouter une valeur en queue de liste 
- * ---------------------------------------------------
- * list 	: liste (node_t *)
- * valeur	: valeur à mettre à la queue de la liste
- * type		: type de l'element 
- * ---------------------------------------------------
- * retourne 0 si la liste est vide, 1 sinon 
- * ----------------------------------------------------
- */
-#define	LIST_APPEND( list , val, type )  \
-   ((list) != NULL ? \
-   	(( list = list_append(list, (type*)val)), 1 ) : \
-	(type)0)
-	
+typedef struct calcul_sheet{
+	char * nomFic;
+	int nbLignes;
+	int nbColonnes;
+	s_cell * listCellule;
+}calcul_sheet;
 
-
+//fonction qui analyse la chaîne de caractère associée à une cellule (le contenu de la cellule)
+node_t * evaluation_cellule(s_cell *, node_t *);
+int isOperator(char);
 // declarations des fonctions publics
 node_t * list_create(void); 
 //creation d'une nouvelle liste vide
