@@ -8,13 +8,21 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "liste.h"
+#include "../liste/liste.h"
 #include "cellule.h"
 #include "../stack/stack.h"
 #define SIZE_OPERATOR 4
 
 const char operator[SIZE_OPERATOR] = {'+','-','/','*'};
-const char * separator = ",/";
+const char * separator = " ";
+
+s_cell * cellule_create(char *chaine){
+	s_cell * cell = (s_cell*)malloc(sizeof(s_cell));
+	cell->chaineSaisie = chaine;
+	cell->listeJeton = list_create();
+	cell->next = NULL;
+	cell->val = 0;
+}
 
 int isOperator(char c){
 	int trouve = 0;
@@ -28,25 +36,24 @@ int isOperator(char c){
 	return trouve;
 }
 
-node_t * evaluation_cellule(s_cell * cellule, node_t * list){
+void * evaluation_cellule(s_cell * cellule, node_t * list){
 	s_token * t = (s_token*)malloc(sizeof(s_token));
 	char saisie[10];
-	int pos, val, val_pile;
-	int trouve = 0;
+	int pos, val, val_pile, trouve = 0;
 	strcpy(saisie, cellule->chaineSaisie);
-	printf("%s\n",saisie);
 	char *tok = strtok(saisie, separator);
+	char *ptr;
 	
-	
-	while(tok != NULL){
-		printf(" %s\n", tok);
 		
-		if((int)*tok == *tok){ //Si c'est un int
+	while(tok != NULL){
+		double tokDouble = atof(tok);
+		double ret = strtod(saisie, &ptr);
+		if (ret == tokDouble){ //Si c'est un double
+			printf("%f\n",tokDouble);
 			t->type = VALUE;
-			t->value.cst = *tok;
-		} else if (tok[1] == NULL){ //Si c'est un opérateur
-			if (isOperator(*tok)){
-				t->type = OPERATOR;
+			t->value.cst = tokDouble;
+		} else if (isOperator(*tok)){ //Si c'est un opérateur
+			t->type = OPERATOR;
 				switch(*tok){
 					case '+' : t->value.cst = 1;
 						break;
@@ -59,7 +66,6 @@ node_t * evaluation_cellule(s_cell * cellule, node_t * list){
 					default : t->value.cst = 0;
 						break;
 					}
-				}		
 			} else{ //Si c'est une reférence à une cellule
 				node_t *tmp = list; 
 				while (tmp != NULL && trouve == 0){
@@ -72,14 +78,8 @@ node_t * evaluation_cellule(s_cell * cellule, node_t * list){
 					tmp = tmp->next;
 				}
 			}
-		 
-		cellule->listeJeton->value = t;
-		cellule->listeJeton = cellule->listeJeton->next;
+		cellule->listeJeton = list_insert(cellule->listeJeton, t);
 		tok = strtok(NULL, separator);
 	}
-	node_t *n = (node_t *)malloc(sizeof(node_t));//fonction list_insert
-	n->value = cellule;
-	n->next = list;
-	
-	return n;
+	list = list_insert(list, cellule); 
 }

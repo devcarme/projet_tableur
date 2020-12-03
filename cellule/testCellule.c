@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "liste.h"
+#include "../liste/liste.h"
 #include "cellule.h"
 #include "../stack/stack.h"
 
@@ -17,36 +17,40 @@
 
 
 int main(){
-	char  chaine[] = "1,2,+,4";
-	s_cell *cellule;
-	cellule = (s_cell *)malloc(sizeof(s_cell));
-	cellule->chaineSaisie = chaine;
-	cellule->val = 0;
-	cellule->listeJeton = (node_t *)malloc(sizeof(node_t));
+	char  chaine[] = "1 2 + 4";
+	s_cell *cellule = cellule_create(chaine);
+
 	
-	printf("%s\n",cellule->chaineSaisie);
-	node_t * listCellule = (node_t *)NULL;
-	listCellule = (node_t *)malloc(sizeof(node_t));
+	node_t *listCellule = list_create();
+	listCellule = list_insert(listCellule, cellule); 
+	evaluation_cellule(cellule, listCellule);
 	
-	node_t *liste = (node_t *)malloc(sizeof(node_t));//fonction list_insert
-	liste->value = cellule;
-	liste->next = listCellule;
+	printf("%f\n",atof("blabla"));
+
+	printf("Affichage des jetons de la cellule\n");
+	if(cellule->listeJeton == NULL){
+		 printf("La liste est vide\n\n");
+	}
+	if(cellule->listeJeton->next == NULL){
+		double *p = list_get_data(cellule->listeJeton);
+		printf("%f\n\n", *p);
+	}
 	
-	liste = evaluation_cellule(cellule, liste);
+	node_t *copy = cellule->listeJeton;
+	while (copy != NULL){
+		double *p = list_get_data(copy);
+		printf("%f ", *p);
+		copy = copy->next;
+	}
+	printf("\n\n");
 	
 	
+	//list_affichage(cellule->listeJeton);
 	
 	char addition = '+';
 	printf("Test fonction isOperator avec +\n");
 	printf("%d\n",isOperator(addition));
 	
-	printf("Affichage des jetons de la cellule\n");
-	s_cell * cel = liste->value;
-	while (cel->listeJeton != NULL){
-		s_token *tok = cel->listeJeton->value; 
-		printf(" %d",tok->value.cst);
-		cel->listeJeton = cel->listeJeton->next;
-	}
 	printf("\n");
 	
 	return 0;
