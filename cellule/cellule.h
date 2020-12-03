@@ -1,6 +1,6 @@
 /* ---------------------------------------------------
  * Entete et macro pour la gestion des cellules, des 
- * formules et de leur évaluation
+ * formules et de leur ï¿½valuation
  * ---------------------------------------------------
  * L. Ducarme
  * ---------------------------------------------------
@@ -23,7 +23,7 @@ typedef struct cell s_cell;
 typedef struct token{
 	enum {VALUE, REF, OPERATOR} type;
 	union{
-			int cst;
+			double cst;
 			s_cell * ref;
 			void (*operator) (my_stack_t * eval);
 		} value;
@@ -36,8 +36,9 @@ typedef struct calcul_sheet{
 	s_cell * listCellule;
 }calcul_sheet;
 
-//fonction qui analyse la chaîne de caractère associée à une cellule (le contenu de la cellule)
-void * evaluation_cellule(s_cell *, node_t *);
+//fonction qui analyse la chaï¿½ne de caractï¿½re associï¿½e ï¿½ une cellule (le contenu de la cellule)
+s_cell * evaluation_cellule(s_cell *, node_t *);
 int isOperator(char);
 s_cell * cellule_create(char *);
+void affichage_cellule(s_cell *);
 #endif

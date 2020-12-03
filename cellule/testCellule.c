@@ -17,31 +17,16 @@
 
 
 int main(){
-	char  chaine[] = "1 2 + 4";
+	char  chaine[] = "1 2 +";
 	s_cell *cellule = cellule_create(chaine);
 
 	
 	node_t *listCellule = list_create();
-	listCellule = list_insert(listCellule, cellule); 
-	evaluation_cellule(cellule, listCellule);
+	cellule = evaluation_cellule(cellule, listCellule);
+	affichage_cellule(cellule);
+	listCellule = list_insert(listCellule, cellule);
 	
-	printf("%f\n",atof("blabla"));
-
-	printf("Affichage des jetons de la cellule\n");
-	if(cellule->listeJeton == NULL){
-		 printf("La liste est vide\n\n");
-	}
-	if(cellule->listeJeton->next == NULL){
-		double *p = list_get_data(cellule->listeJeton);
-		printf("%f\n\n", *p);
-	}
 	
-	node_t *copy = cellule->listeJeton;
-	while (copy != NULL){
-		double *p = list_get_data(copy);
-		printf("%f ", *p);
-		copy = copy->next;
-	}
 	printf("\n\n");
 	
 	
@@ -50,8 +35,6 @@ int main(){
 	char addition = '+';
 	printf("Test fonction isOperator avec +\n");
 	printf("%d\n",isOperator(addition));
-	
-	printf("\n");
 	
 	return 0;
 

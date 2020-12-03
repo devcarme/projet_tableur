@@ -14,7 +14,7 @@
 #define SIZE_OPERATOR 4
 
 const char operator[SIZE_OPERATOR] = {'+','-','/','*'};
-const char * separator = " ";
+const char * separator = {" "};
 
 s_cell * cellule_create(char *chaine){
 	s_cell * cell = (s_cell*)malloc(sizeof(s_cell));
@@ -22,6 +22,8 @@ s_cell * cellule_create(char *chaine){
 	cell->listeJeton = list_create();
 	cell->next = NULL;
 	cell->val = 0;
+
+	return cell;
 }
 
 int isOperator(char c){
@@ -36,22 +38,50 @@ int isOperator(char c){
 	return trouve;
 }
 
-void * evaluation_cellule(s_cell * cellule, node_t * list){
-	s_token * t = (s_token*)malloc(sizeof(s_token));
-	char saisie[10];
+void affichage_cellule(s_cell * cell){
+	char ptr[10];
+	strcpy(ptr, cell->chaineSaisie);
+	printf("Affichage de cellule\n");
+	printf("Chaine saisie : %s\n",ptr);
+	printf("Valeur de la cellule : %f\n",cell->val);
+	printf("Affichage des jetons de la cellule\n");
+
+	if(cell->listeJeton == NULL){
+		 printf("La liste est vide\n\n");
+		 return;
+	}
+	if(cell->listeJeton->next == NULL){
+		s_token *tok = cell->listeJeton->value;
+		printf("%f\n\n", tok->value.cst);
+		return;
+	}
+	
+	node_t *copy = cell->listeJeton;
+	while (copy != NULL){
+		s_token * tokeneu = copy->value;
+		printf("%f JETON VALUE \n", tokeneu->value.cst);
+		copy = copy->next;
+	}
+
+	}
+
+
+s_cell * evaluation_cellule(s_cell * cellule, node_t * list){
+	char ptr[10];
 	int pos, val, val_pile, trouve = 0;
-	strcpy(saisie, cellule->chaineSaisie);
-	char *tok = strtok(saisie, separator);
-	char *ptr;
+	strcpy(ptr, cellule->chaineSaisie) ;
+	printf("SALUT CHAINE SAISIE %s\n",ptr);
+	char *tok = strtok(ptr, separator);
+	
 	
 		
 	while(tok != NULL){
-		double tokDouble = atof(tok);
-		double ret = strtod(saisie, &ptr);
-		if (ret == tokDouble){ //Si c'est un double
-			printf("%f\n",tokDouble);
+		double val = 0;
+		s_token * t = (s_token*)malloc(sizeof(s_token));
+		if (sscanf(tok,"%lf", &val) == 1){ //Si c'est un double
+			printf("%f DOUBLE\n",val);
 			t->type = VALUE;
-			t->value.cst = tokDouble;
+			t->value.cst = val;
 		} else if (isOperator(*tok)){ //Si c'est un opérateur
 			t->type = OPERATOR;
 				switch(*tok){
@@ -79,7 +109,10 @@ void * evaluation_cellule(s_cell * cellule, node_t * list){
 				}
 			}
 		cellule->listeJeton = list_insert(cellule->listeJeton, t);
+		s_token * tokeneu = cellule->listeJeton->value;
+		printf("%f JETON VALUE \n", tokeneu->value.cst);
 		tok = strtok(NULL, separator);
 	}
-	list = list_insert(list, cellule); 
+	
+	return cellule; 
 }
