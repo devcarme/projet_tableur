@@ -38,7 +38,12 @@ typedef struct calcul_sheet{
 
 //fonction qui analyse la cha�ne de caract�re associ�e � une cellule (le contenu de la cellule)
 s_cell * evaluation_cellule(s_cell *, node_t *);
+//fonction qui détermine si un caractère est un opérateur
 int isOperator(char);
+//fonction pour initialiser une cellule
 s_cell * cellule_create(char *);
+//fonction affichage d'une cellule
 void affichage_cellule(s_cell *);
+//fonction affichage d'un token
+void affichage_token(s_token *);
 #endif

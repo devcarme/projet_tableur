@@ -38,6 +38,21 @@ int isOperator(char c){
 	return trouve;
 }
 
+void affichage_token(s_token * token){
+	printf("TYPE : ");
+	switch(token->type){
+		case 0: printf("VALUE ");
+			break;
+		case 1: printf("REF ");
+			break;
+		case 2: printf("OPERATOR ");
+			break;
+		default: printf("Erreur typage token");
+			break;	
+	}
+	printf(" VALUE : %f\n",token->value.cst);
+}
+
 void affichage_cellule(s_cell * cell){
 	char ptr[10];
 	strcpy(ptr, cell->chaineSaisie);
@@ -52,34 +67,30 @@ void affichage_cellule(s_cell * cell){
 	}
 	if(cell->listeJeton->next == NULL){
 		s_token *tok = cell->listeJeton->value;
-		printf("%f\n\n", tok->value.cst);
+		affichage_token(tok);
 		return;
 	}
 	
 	node_t *copy = cell->listeJeton;
 	while (copy != NULL){
 		s_token * tokeneu = copy->value;
-		printf("%f JETON VALUE \n", tokeneu->value.cst);
+		affichage_token(tokeneu);
 		copy = copy->next;
 	}
-
-	}
+	printf("\n");
+}
 
 
 s_cell * evaluation_cellule(s_cell * cellule, node_t * list){
 	char ptr[10];
-	int pos, val, val_pile, trouve = 0;
+	int pos, val, val_pile, trouve = 0, premierToken = 1;
 	strcpy(ptr, cellule->chaineSaisie) ;
-	printf("SALUT CHAINE SAISIE %s\n",ptr);
 	char *tok = strtok(ptr, separator);
 	
-	
-		
 	while(tok != NULL){
 		double val = 0;
 		s_token * t = (s_token*)malloc(sizeof(s_token));
 		if (sscanf(tok,"%lf", &val) == 1){ //Si c'est un double
-			printf("%f DOUBLE\n",val);
 			t->type = VALUE;
 			t->value.cst = val;
 		} else if (isOperator(*tok)){ //Si c'est un opérateur
@@ -108,11 +119,13 @@ s_cell * evaluation_cellule(s_cell * cellule, node_t * list){
 					tmp = tmp->next;
 				}
 			}
-		cellule->listeJeton = list_insert(cellule->listeJeton, t);
-		s_token * tokeneu = cellule->listeJeton->value;
-		printf("%f JETON VALUE \n", tokeneu->value.cst);
-		tok = strtok(NULL, separator);
-	}
-	
+			if(premierToken){
+				cellule->listeJeton = list_insert(cellule->listeJeton, t);
+				premierToken = 0;
+			}else{
+				cellule->listeJeton = list_append(cellule->listeJeton, t);
+			}
+			tok = strtok(NULL, separator);
+		}
 	return cellule; 
 }
