@@ -18,7 +18,7 @@
 
 int main(){
 	char  chaine[] = "1 2 + 4";
-	char  chaine2[] = "2 5 * 6";
+	char  chaine2[] = "2 5 * C1";
 	s_cell *cellule = cellule_create(chaine);
 	s_cell *cellule2 = cellule_create(chaine2);
 	
