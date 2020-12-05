@@ -13,7 +13,7 @@
 #include "../stack/stack.h"
 #define SIZE_OPERATOR 4
 
-const char operator[SIZE_OPERATOR] = {'+','-','/','*'};
+static char operator[SIZE_OPERATOR] = {'+','-','/','*'};
 const char * separator = {" "};
 
 s_cell * cellule_create(char *chaine){
@@ -48,7 +48,7 @@ void affichage_token(s_token * token){
 				printf(" Cellule référencée\n");
 				affichage_cellule(token->value.ref);
 			break;
-		case 2: printf("OPERATOR ");
+		case 2: printf("OPERATOR \n");
 			break;
 		default: printf("Erreur typage token");
 			break;	
@@ -85,13 +85,11 @@ void affichage_cellule(s_cell * cell){
 
 
 s_cell * evaluation_cellule(s_cell * cellule, node_t * list){
-	char ptr[10];
-	int pos, val, val_pile, trouve = 0, premierToken = 1;
+	char c, ptr[45];
+	double l;
+	int val;
 	strcpy(ptr, cellule->chaineSaisie) ;
 	char *tok = strtok(ptr, separator);
-	double ret;
-	char *ptr2;
-  	ret = strtod(tok, &ptr2);
 	
 	while(tok != NULL){
 		double val = 0;
@@ -102,22 +100,26 @@ s_cell * evaluation_cellule(s_cell * cellule, node_t * list){
 		} else if (isOperator(*tok)){ //Si c'est un opérateur
 			t->type = OPERATOR;
 				switch(*tok){
-					case '+' : t->value.cst = 1;
+					case '+' : t->value.operator = &add;
 						break;
-					case '-' : t->value.cst = 2;
+					case '-' : t->value.operator = &substract;
 						break;
-					case '/' : t->value.cst = 3;
+					case '/' : t->value.operator = &divise;
 						break;
-					case '*' : t->value.cst = 4;
-						break;
-					default : t->value.cst = 0;
+					case '*' : t->value.operator = &multiply;
 						break;
 					}
-			} else if(strcmp(ptr2,"C") == 0 && strcmp(tok,ptr2) == 0 ){ //Si c'est une reférence à une cellule
+			} else if(sscanf(tok, "%[A-Z]%lf",&c,&l) == 2){ //Si c'est une reférence à une cellule
+				tok++;
+				double valu = atof(tok);
+				printf("VALUE VALUE DE REF %f\n",l);
    				node_t *tmp = list; 
 				int i = 0;
 				s_cell *ce = tmp->value;
-				while (tmp != NULL && i < ret){
+				if(tmp->next == NULL && l <= 1){
+					ce = tmp->value;
+				}
+				while (tmp->next != NULL && i <= l){
 					ce = tmp->value;
 					tmp = tmp->next;
 					i++;
@@ -125,20 +127,72 @@ s_cell * evaluation_cellule(s_cell * cellule, node_t * list){
 				if(tmp != NULL){
 					t->type = REF;
 					t->value.ref = ce;
-					cellule->next = ce;	
 				}
 			} else{
 				printf("Erreur sur la chaine saisie de la cellule\n");
 				return cellule;
 			}
 
-			if(premierToken){
+			if(cellule->listeJeton == NULL){
 				cellule->listeJeton = list_insert(cellule->listeJeton, t);
-				premierToken = 0;
 			}else{
 				cellule->listeJeton = list_append(cellule->listeJeton, t);
 			}
 			tok = strtok(NULL, separator);
 		}
 	return cellule; 
+}
+
+void add(my_stack_t *stack){
+	double val = 0;
+	double val2 = 0;
+	STACK_POP2(stack, val, double);
+	STACK_POP2(stack, val2, double);
+	STACK_PUSH(stack, val + val2, double);
+}
+
+void divise(my_stack_t *stack){
+	double val = 0;
+	double val2 = 0;
+	STACK_POP2(stack, val, double);
+	STACK_POP2(stack, val2, double);
+	STACK_PUSH(stack, val2 / val, double);
+}
+
+void multiply(my_stack_t *stack){
+	double val = 0;
+	double val2 = 0;
+	STACK_POP2(stack, val, double);
+	STACK_POP2(stack, val2, double);
+	STACK_PUSH(stack, val * val2, double);
+}
+
+void substract(my_stack_t *stack){
+	double val = 0;
+	double val2 = 0;
+	STACK_POP2(stack, val, double);
+	STACK_POP2(stack, val2, double);
+	STACK_PUSH(stack, val - val2, double);
+}
+
+void traitementCellule(s_cell * cell){
+	my_stack_t * stack = STACK_CREATE(16,double);
+	node_t *list = cell->listeJeton;
+	while(list != NULL){
+		s_token *token = list->value;
+		switch (token->type){
+			case 0:
+				STACK_PUSH(stack, token->value.cst, double);
+				break;
+			case 1:
+				STACK_PUSH(stack, token->value.ref->val, double);
+				break;
+			case 2:
+				((token->value.operator)(stack));
+			default:
+				break;
+		}
+		list = list->next;
+	}
+	STACK_POP2(stack, cell->val, double);
 }

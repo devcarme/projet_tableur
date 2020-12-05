@@ -17,12 +17,16 @@
 
 
 int main(){
-	char  chaine[] = "1 2 + 4";
+	char  chaine[] = "4 2 /";
 	char  chaine2[] = "2 5 * C1";
 	s_cell *cellule = cellule_create(chaine);
 	s_cell *cellule2 = cellule_create(chaine2);
-	
 	node_t *listCellule = list_create();
+
+	char addition = '+';
+	printf("Test fonction isOperator avec +\n");
+	printf("%d\n",isOperator(addition));
+	
 	cellule = evaluation_cellule(cellule, listCellule);
 	listCellule = list_insert(listCellule, cellule);
 	cellule2 = evaluation_cellule(cellule2, listCellule);
@@ -36,10 +40,9 @@ int main(){
 		copy = copy->next;
 	}
 
-	char addition = '+';
-	printf("Test fonction isOperator avec +\n");
-	printf("%d\n",isOperator(addition));
-	
+	traitementCellule(cellule);
+	affichage_cellule(cellule);
+
 	return 0;
 
 }

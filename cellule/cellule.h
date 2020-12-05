@@ -46,4 +46,9 @@ s_cell * cellule_create(char *);
 void affichage_cellule(s_cell *);
 //fonction affichage d'un token
 void affichage_token(s_token *);
+void add(my_stack_t *);
+void divise(my_stack_t *);
+void multiply(my_stack_t *);
+void substract(my_stack_t *);
+void traitementCellule(s_cell *);
 #endif
