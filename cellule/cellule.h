@@ -5,11 +5,14 @@
  * L. Ducarme
  * ---------------------------------------------------
  */
+
+
 #ifndef CELLULE_H
 #define CELLULE_H
 
 #include "../stack/stack.h"
 #include "../liste/liste.h"
+
 
 struct cell{
 	char * chaineSaisie;
@@ -33,11 +36,12 @@ typedef struct calcul_sheet{
 	char * nomFic;
 	int nbLignes;
 	int nbColonnes;
-	s_cell * listCellule;
-}calcul_sheet;
+	node_t * listCellule;
+}s_calcul_sheet;
+
 
 //fonction qui analyse la cha�ne de caract�re associ�e � une cellule (le contenu de la cellule)
-s_cell * evaluation_cellule(s_cell *, node_t *);
+s_cell *evaluation_cellule(s_cell *);
 //fonction qui détermine si un caractère est un opérateur
 int isOperator(char);
 //fonction pour initialiser une cellule

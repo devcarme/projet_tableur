@@ -13,8 +13,9 @@
 #include "../stack/stack.h"
 #define SIZE_OPERATOR 4
 
-static char operator[SIZE_OPERATOR] = {'+','-','/','*'};
+char operator[SIZE_OPERATOR] = {'+','-','/','*'};
 const char * separator = {" "};
+extern s_calcul_sheet *feuille_calcul;
 
 s_cell * cellule_create(char *chaine){
 	s_cell * cell = (s_cell*)malloc(sizeof(s_cell));
@@ -57,7 +58,7 @@ void affichage_token(s_token * token){
 }
 
 void affichage_cellule(s_cell * cell){
-	char ptr[10];
+	char ptr[45];
 	strcpy(ptr, cell->chaineSaisie);
 	printf("Affichage de cellule\n");
 	printf("Chaine saisie : %s\n",ptr);
@@ -80,11 +81,10 @@ void affichage_cellule(s_cell * cell){
 		affichage_token(tokeneu);
 		copy = copy->next;
 	}
-	printf("\n");
 }
 
 
-s_cell * evaluation_cellule(s_cell * cellule, node_t * list){
+s_cell * evaluation_cellule(s_cell * cellule){
 	char c, ptr[45];
 	double l;
 	int val;
@@ -110,10 +110,7 @@ s_cell * evaluation_cellule(s_cell * cellule, node_t * list){
 						break;
 					}
 			} else if(sscanf(tok, "%[A-Z]%lf",&c,&l) == 2){ //Si c'est une reférence à une cellule
-				tok++;
-				double valu = atof(tok);
-				printf("VALUE VALUE DE REF %f\n",l);
-   				node_t *tmp = list; 
+   				node_t *tmp = feuille_calcul->listCellule; 
 				int i = 0;
 				s_cell *ce = tmp->value;
 				if(tmp->next == NULL && l <= 1){
@@ -138,6 +135,7 @@ s_cell * evaluation_cellule(s_cell * cellule, node_t * list){
 			}else{
 				cellule->listeJeton = list_append(cellule->listeJeton, t);
 			}
+			
 			tok = strtok(NULL, separator);
 		}
 	return cellule; 
@@ -172,11 +170,11 @@ void substract(my_stack_t *stack){
 	double val2 = 0;
 	STACK_POP2(stack, val, double);
 	STACK_POP2(stack, val2, double);
-	STACK_PUSH(stack, val - val2, double);
+	STACK_PUSH(stack, val2 - val, double);
 }
 
 void traitementCellule(s_cell * cell){
-	my_stack_t * stack = STACK_CREATE(16,double);
+	my_stack_t * stack = STACK_CREATE(32,double);
 	node_t *list = cell->listeJeton;
 	while(list != NULL){
 		s_token *token = list->value;
