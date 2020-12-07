@@ -45,7 +45,7 @@ s_calcul_sheet *feuille_calcul;
 //fonction qui analyse la cha�ne de caract�re associ�e � une cellule (le contenu de la cellule)
 s_cell *evaluation_cellule(s_cell *);
 //fonction qui détermine si un caractère est un opérateur
-int isOperator(char);
+int isOperator(char *);
 //fonction pour initialiser une cellule
 s_cell * cellule_create(char *, char *);
 //fonction affichage d'une cellule
@@ -60,6 +60,10 @@ void divise(my_stack_t *);
 void multiply(my_stack_t *);
 //fonction soustraction
 void substract(my_stack_t *);
+//fonction reste de division
+void mod(my_stack_t *);
 //fonction de traitement d'une cellule, qui affecte une valeur à la cellule selon la notation polonaise inversée
 void traitementCellule(s_cell *);
+//affichage des cellules dans la liste de la feuille de calcul
+void affichageListCelluleFeuilleCalcul();
 #endif
