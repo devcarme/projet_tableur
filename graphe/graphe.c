@@ -19,48 +19,50 @@ extern const char * separator;
 extern s_calcul_sheet *feuille_calcul;
 
 void tri_topologique(s_cell *cellule_evaluee){
-	node_t *sous_graphe_init = feuille_calcul->listCellule;
+	//Initialisation 
+	node_t *sous_graphe_init = cellule_evaluee->succs;
 	node_t *list = list_create();
-	node_t *tmp = feuille_calcul->listCellule;
-	
-	while(sous_graphe_init != NULL){
-		s_cell *cellule_p = sous_graphe_init->value;
-		node_t *succsesseurs = cellule_p->succs; 
-		while(succsesseurs != NULL){
-			s_cell *cp = succsesseurs->value;
-			printf("CP NOM %s\n",cp->nom);
-			printf("CelluleEvaluee NOM %s\n",cellule_evaluee->nom);
-			if(strcmp(cp->nom , cellule_evaluee->nom)==0){
-				printf("YYEEEES\n");
-				cellule_p->degre_negatif++;
-			}
-			succsesseurs = succsesseurs->next;
-		}
-		
-		// if(degre_negatif[i-1].degre < degre_negatif[i].degre){
-		// 	s_degre_cell tmpDegre = degre_negatif[i];
-		// 	degre_negatif[i] = degre_negatif[i-1];
-		// 	degre_negatif[i-1] = tmpDegre;
-		// }
-		sous_graphe_init = sous_graphe_init->next;
-	}
-	
-	list = feuille_calcul->listCellule;
 
+	//Le calcul des degrés est fait dans le module cellule
+
+	// while(sous_graphe_init != NULL){
+	// 	s_cell *copyCellule = sous_graphe_init->value;
+	// 	node_t *copy = feuille_calcul->listCellule;
+	// 	while(copy != NULL){
+	// 		s_cell *copyCell = copy->value;
+	// 		node_t *copyListeJeton = copyCell->listeJeton;
+	// 			while(copyListeJeton != NULL){
+	// 				s_token *copyToken = copyListeJeton->value;
+	// 				if(copyToken->value.ref == copyCellule){
+	// 					copyCellule->degre_negatif++;
+	// 				}
+	// 				copyListeJeton = copyListeJeton->next;
+	// 			}
+				
+	// 		copy = copy->next;
+	// 	}
+	// 	sous_graphe_init = sous_graphe_init->next;
+	// }
+	
+	list = list_insert(list, cellule_evaluee);
+	printf("DEGRE NEGATIF %d\n",cellule_evaluee->degre_negatif);
+
+	//Itération
+	while(list != NULL){
+		s_cell *cellTete = list->value;
+		list = list_headRemove(list);
+		traitementCellule(cellTete);
+		while (cellTete->succs != NULL){
+			s_cell *succ = cellTete->succs->value;
+			succ->degre_negatif--;
+			if(succ->degre_negatif == 0){
+				list = list_insert(list,succ);
+			}
+			cellTete->succs = cellTete->succs->next; 
+		}
+	}
 	if(list == NULL){
-		printf("Liste vide\n");
+		printf("Liste vide, fin\n");
 		return;
 	}
-
-	node_t *copy = list;
-	while(copy != NULL){
-		s_cell *tmpCell = list->value;
-		printf("DEGRE CELLULE %s : %d  \n",tmpCell->nom,tmpCell->degre_negatif);
-		copy = copy->next;
-	}
-	
-
-	traitementCellule(list->value);
-
-	list = list_headRemove(list);
 }

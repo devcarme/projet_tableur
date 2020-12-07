@@ -17,12 +17,14 @@ char operator[SIZE_OPERATOR] = {'+','-','/','*'};
 const char * separator = {" "};
 extern s_calcul_sheet *feuille_calcul;
 
-s_cell * cellule_create(char *chaine){
+s_cell * cellule_create(char *chaine, char * nom){
 	s_cell * cell = (s_cell*)malloc(sizeof(s_cell));
 	cell->chaineSaisie = chaine;
+	cell->nom = nom;
 	cell->listeJeton = list_create();
-	cell->next = NULL;
+	cell->succs = list_create();
 	cell->val = 0;
+	cell->degre_negatif = 0;
 
 	return cell;
 }
@@ -63,6 +65,7 @@ void affichage_cellule(s_cell * cell){
 	printf("Affichage de cellule\n");
 	printf("Chaine saisie : %s\n",ptr);
 	printf("Valeur de la cellule : %f\n",cell->val);
+	printf("Degré négatif de la cellule : %d\n",cell->degre_negatif);
 	printf("Affichage des jetons de la cellule\n");
 
 	if(cell->listeJeton == NULL){
@@ -110,18 +113,21 @@ s_cell * evaluation_cellule(s_cell * cellule){
 						break;
 					}
 			} else if(sscanf(tok, "%[A-Z]%lf",&c,&l) == 2){ //Si c'est une reférence à une cellule
-   				node_t *tmp = feuille_calcul->listCellule; 
-				int i = 0;
+   				node_t *tmp = feuille_calcul->listCellule;
 				s_cell *ce = tmp->value;
-				if(tmp->next == NULL && l <= 1){
+				if(tmp->next == NULL && strcmp(tok, ce->nom) == 0){
 					ce = tmp->value;
 				}
-				while (tmp->next != NULL && i <= l){
+				while (tmp->next != NULL && strcmp(tok, ce->nom) == 0){
 					ce = tmp->value;
 					tmp = tmp->next;
-					i++;
 				}
-				if(tmp != NULL){
+				if (strcmp(tok, ce->nom) != 0){
+					printf("La cellule %s n'existe pas\n",tok);
+					return cellule;
+				}else{
+					ce->succs = list_insert(ce->succs,cellule);
+					cellule->degre_negatif++;
 					t->type = REF;
 					t->value.ref = ce;
 				}

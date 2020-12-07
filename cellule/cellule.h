@@ -15,10 +15,12 @@
 
 
 struct cell{
+	int degre_negatif;
+	char * nom;
 	char * chaineSaisie;
 	double val;
 	node_t * listeJeton;
-	struct cell * next;
+	node_t * succs;
 };
 typedef struct cell s_cell;
 
@@ -38,21 +40,26 @@ typedef struct calcul_sheet{
 	int nbColonnes;
 	node_t * listCellule;
 }s_calcul_sheet;
-
+s_calcul_sheet *feuille_calcul; 
 
 //fonction qui analyse la cha�ne de caract�re associ�e � une cellule (le contenu de la cellule)
 s_cell *evaluation_cellule(s_cell *);
 //fonction qui détermine si un caractère est un opérateur
 int isOperator(char);
 //fonction pour initialiser une cellule
-s_cell * cellule_create(char *);
+s_cell * cellule_create(char *, char *);
 //fonction affichage d'une cellule
 void affichage_cellule(s_cell *);
 //fonction affichage d'un token
 void affichage_token(s_token *);
+//fonction addition
 void add(my_stack_t *);
+//fonction division
 void divise(my_stack_t *);
+//fonction multiplication
 void multiply(my_stack_t *);
+//fonction soustraction
 void substract(my_stack_t *);
+//fonction de traitement d'une cellule, qui affecte une valeur à la cellule selon la notation polonaise inversée
 void traitementCellule(s_cell *);
 #endif

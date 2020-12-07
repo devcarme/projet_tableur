@@ -32,7 +32,7 @@ typedef struct node node_t;
  * ajouter une valeur en queue de liste 
  * ---------------------------------------------------
  * list 	: liste (node_t *)
- * valeur	: valeur à mettre à la queue de la liste
+ * valeur	: valeur ï¿½ mettre ï¿½ la queue de la liste
  * type		: type de l'element 
  * ---------------------------------------------------
  * retourne 0 si la liste est vide, 1 sinon 
@@ -50,7 +50,7 @@ node_t * list_create(void);
 //creation d'une nouvelle liste vide
 void * list_get_data(const node_t *node);
 void list_set_data(node_t *node, void *data);
-//lire ou écrire la donnée d'un noeud
+//lire ou ï¿½crire la donnï¿½e d'un noeud
 node_t * list_next(node_t * node); 
 //obtenir le noeud suivant;
 node_t * list_insert(node_t * head, void * data); 
@@ -61,13 +61,13 @@ node_t * list_append(node_t * head, void * data);
 //retourne la tete de liste
 node_t * list_remove(node_t * head, void * data);
 //suppression de la premiere instance d'une 
-//donnée dans la liste, retourne la tete de liste
+//donnï¿½e dans la liste, retourne la tete de liste
 node_t * list_headRemove(node_t * head);
 //suppression de la tete de liste
 //retourne la nouvelle tete de liste
 void list_destroy(node_t * head);
 //destruction d'une liste
-//(la libération des données n'est pas prise en charge
+//(la libï¿½ration des donnï¿½es n'est pas prise en charge
 void list_affichage(node_t * head);
 //afichage de la liste
 #endif

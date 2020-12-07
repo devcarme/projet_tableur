@@ -21,8 +21,8 @@ int main(){
 
 	feuille_calcul = (s_calcul_sheet *)malloc(sizeof(s_calcul_sheet));
 	feuille_calcul->nomFic = "tableur.txt";
-	feuille_calcul->nbLignes = 64;
-	feuille_calcul->nbColonnes = 64;
+	feuille_calcul->nbLignes = 50;
+	feuille_calcul->nbColonnes = 26;
 	feuille_calcul->listCellule = NULL;
 
 	s_cell *cellule = cellule_create(chaine, "A1");
@@ -33,7 +33,21 @@ int main(){
 	cellule2 = evaluation_cellule(cellule2);
 	feuille_calcul->listCellule = list_append(feuille_calcul->listCellule, cellule2);
 
-	tri_topologique(cellule2);
+	traitementCellule(cellule);
+	traitementCellule(cellule2);
+
+	affichage_cellule(cellule);
+	affichage_cellule(cellule2);
+
+	printf("Modification de la première cellule\n");
+	cellule->chaineSaisie = "2 2 / 2 + 4 *";
+	evaluation_cellule(cellule);
+
+	printf("Tri topologique à partir de la première cellule\n");
+	tri_topologique(cellule);
+
+	affichage_cellule(cellule);
+	affichage_cellule(cellule2);
 
 	return 0;
 
